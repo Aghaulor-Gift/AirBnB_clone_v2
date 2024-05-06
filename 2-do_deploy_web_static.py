@@ -6,7 +6,6 @@ import os
 
 
 env.user = 'ubuntu'
-env.key_filename = '/path/to/your/ssh/private/key.pem'
 env.hosts = ['52.91.134.237', '54.158.211.199']
 
 
@@ -22,22 +21,19 @@ def do_deploy(archive_path):
     filename = os.path.splitext(filename_ext)[0]
 
     run('mkdir -p /data/web_static/releases/{}/'.format(filename))
-    run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'.format(
-        filename_ext, filename))
+    run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'.format(filename_ext, filename))
 
     # Delete the archive from the servers
     run('rm /tmp/{}'.format(filename_ext))
 
     # Move contents to the proper location and remove unnecessary folder
-    run('mv /data/web_static/releases/{}/web_static/* /data/web_static/releases
-        /{}/'.format(filename, filename))
+    run('mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/'.format(filename, filename))
     run('rm -rf /data/web_static/releases/{}/web_static'.format(filename))
 
     # Delete the symbolic link /data/web_static/current from the servers
     run('rm -rf /data/web_static/current')
 
     # New symbolic link /data/web_static/current linked to the new version
-    run('ln -s /data/web_static/releases/{}/ /data/web_static/current'.format(
-        filename))
+    run('ln -s /data/web_static/releases/{}/ /data/web_static/current'.format(filename))
 
     return True
